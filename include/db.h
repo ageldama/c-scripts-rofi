@@ -6,8 +6,10 @@
 #include <stdbool.h>
 #include <time.h>
 
-#define DB_ERRMSG_MALLOC malloc
-#define DB_ERRMSG_FREE free
+#define DB_MALLOC malloc
+#define DB_FREE free
+
+#define DB_CMD_MAX 8192
 
 typedef struct
 {
@@ -18,26 +20,29 @@ typedef struct
   UT_hash_handle hh;
 } db_t;
 
-EXTERN db_t* db_init();
+EXTERN db_t *db_init ();
 
-EXTERN void db_free(db_t* p_db);
+EXTERN void db_free (db_t *p_db);
 
-EXTERN void db_add(db_t* p_db, char* cmd, time_t last_epoch, bool run_alt);
+EXTERN void db_add (db_t *p_db, db_t *p_entry);
+EXTERN void db_add_args_copying (db_t *p_db, const char *cmd,
+                                 time_t last_epoch, bool run_alt);
 
-EXTERN void db_save_to_filename(db_t* p_db, const char* filename);
+EXTERN void db_save_to_filename (db_t *p_db, const char *filename);
 
-EXTERN char* db_load_from_filename(db_t* p_db, const char* filename);
+EXTERN char *db_load_from_filename (db_t *p_db, const char *filename);
 
-EXTERN db_t* db_get(db_t* p_db, const char* cmd);
+EXTERN db_t *db_get (db_t *p_db, const char *cmd);
 
-EXTERN time_t db_set_last_epoch(db_t* p_db, const char* cmd, time_t last_epoch);
+EXTERN time_t db_set_last_epoch (db_t *p_db, const char *cmd,
+                                 time_t last_epoch);
 
-EXTERN time_t db_get_last_epoch(db_t* p_db, const char* cmd);
+EXTERN time_t db_get_last_epoch (db_t *p_db, const char *cmd);
 
-EXTERN bool db_set_run_alt(db_t* p_db, const char* cmd, bool run_alt);
+EXTERN bool db_set_run_alt (db_t *p_db, const char *cmd, bool run_alt);
 
-EXTERN bool db_toggle_run_alt(db_t* p_db, const char* cmd);
+EXTERN bool db_toggle_run_alt (db_t *p_db, const char *cmd);
 
-EXTERN bool db_is_run_alt(db_t* p_db, const char* cmd);
+EXTERN bool db_is_run_alt (db_t *p_db, const char *cmd);
 
 #endif /* DB_H */
