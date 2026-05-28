@@ -22,14 +22,16 @@ db_free (db_t *p_db)
 }
 
 void
-db_add (db_t *p_db, db_t *p_entry)
+db_add (db_t **pp_db, db_t *p_entry)
 {
+  db_t *p_db = *pp_db;
   db_t *p_found = NULL;
 
   HASH_FIND_STR (p_db, p_entry->cmd, p_found);
   if (p_found == NULL)
     {
       HASH_ADD_STR (p_db, cmd, p_entry);
+      *pp_db = p_db;
     }
   else
     {
@@ -39,7 +41,7 @@ db_add (db_t *p_db, db_t *p_entry)
 }
 
 void
-db_add_args_copying (db_t *p_db, const char *cmd, time_t last_epoch,
+db_add_args_copying (db_t **pp_db, const char *cmd, time_t last_epoch,
                      bool run_alt)
 {
   db_t *p_entry = DB_MALLOC (sizeof (db_t));
@@ -54,5 +56,5 @@ db_add_args_copying (db_t *p_db, const char *cmd, time_t last_epoch,
   p_entry->run_alt = run_alt;
   p_entry->last_epoch = last_epoch;
   //
-  db_add (p_db, p_entry);
+  db_add (pp_db, p_entry);
 }
