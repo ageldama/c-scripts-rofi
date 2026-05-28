@@ -1,8 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "db.h"
+
 int
-main(int argc, char** argv)
+main (int argc, char **argv)
 {
-  exit(EXIT_SUCCESS);
+  (void)argc;
+  (void)argv;
+
+  exit (EXIT_SUCCESS);
 }

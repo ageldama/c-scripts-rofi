@@ -30,7 +30,7 @@ if(CLANG_FORMAT_EXE)
   )
 
   add_custom_target(fmt
-    COMMAND ${CLANG_FORMAT_EXE} -i ${ALL_FORMAT_FILES}
+    COMMAND ${CLANG_FORMAT_EXE} --verbose -i ${ALL_FORMAT_FILES}
     COMMENT "Formatting source files with clang-format..."
   )
 else()
@@ -76,4 +76,5 @@ endif()
 
 add_executable(scripts-rofi ${SOURCES})
 
-target_include_directories(scripts-rofi PUBLIC include)
+target_include_directories(scripts-rofi
+  PUBLIC include ${PROJECT_SOURCE_DIR}/vnd/uthash/include)
