@@ -1,5 +1,7 @@
 #include "db.h"
 #include <string.h>
+#include <stdio.h>
+#include <errno.h>
 
 db_t *
 db_init ()
@@ -58,3 +60,22 @@ db_add_args_copying (db_t **pp_db, const char *cmd, time_t last_epoch,
   //
   db_add (pp_db, p_entry);
 }
+
+char* db_save_to_filename (db_t *p_db, const char *filename)
+{
+  FILE *fp = NULL;
+  fp = fopen(filename, "wb");
+  if(NULL == fp) {
+    char* errmsg = NULL;
+    asprintf(&errmsg, "[ERROR] %s %s %s", __func__,
+             strerror(errno), filename);
+    char* errmsg2 = DB_MALLOC(strlen(errmsg));
+    strcpy(errmsg2, errmsg);
+    free(errmsg);
+    return errmsg2;
+  }
+
+  // TODO
+}
+
+

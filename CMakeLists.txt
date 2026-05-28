@@ -16,7 +16,8 @@ set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -O0 -ggdb3 -fstack-protector -fs
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-add_compile_definitions(_POSIX_C_SOURCE=200809L)
+#add_compile_definitions(_POSIX_C_SOURCE=200809L)
+add_compile_definitions(_GNU_SOURCE)
 
 # --- fmt: clang-format
 

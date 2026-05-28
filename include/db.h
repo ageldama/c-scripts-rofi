@@ -28,7 +28,7 @@ EXTERN void db_add (db_t **pp_db, db_t *p_entry);
 EXTERN void db_add_args_copying (db_t **pp_db, const char *cmd,
                                  time_t last_epoch, bool run_alt);
 
-EXTERN void db_save_to_filename (db_t *p_db, const char *filename);
+EXTERN char* db_save_to_filename (db_t *p_db, const char *filename);
 
 EXTERN char *db_load_from_filename (db_t **pp_db, const char *filename);
 
