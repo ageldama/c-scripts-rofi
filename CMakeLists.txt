@@ -79,4 +79,5 @@ endif()
 add_executable(scripts-rofi ${SOURCES})
 
 target_include_directories(scripts-rofi
-  PUBLIC include ${PROJECT_SOURCE_DIR}/vnd/uthash/include)
+  PRIVATE include
+  ${PROJECT_SOURCE_DIR}/vnd/uthash/include)

@@ -6,7 +6,9 @@ Checks: '-*,bugprone-*,modernize-*,performance-*,readability-*,misc-include-clea
 WarningsAsErrors: 'bugprone-*,performance-*'
 
 # Filter which headers are analyzed (often set to include project headers only)
-HeaderFilterRegex: 'include/.*'
+
+HeaderFilterRegex: '^(src/|include/)'
+
 
 # Check-specific options
 CheckOptions:
