@@ -19,8 +19,9 @@ errmsg_fmt_alloc (const char *fmt, ...)
       errmsg = strdup ("[ERROR] INTERNAL ERROR");
     }
 
-  char *errmsg_copy = ERRMSG_MALLOC (strlen (errmsg));
-  strcpy (errmsg_copy, errmsg);
+  char *errmsg_copy = ERRMSG_MALLOC (errmsg_len + 1);
+  errmsg_copy[errmsg_len] = '\0';
+  strncpy (errmsg_copy, errmsg, errmsg_len);
   free (errmsg);
 
   return errmsg_copy;

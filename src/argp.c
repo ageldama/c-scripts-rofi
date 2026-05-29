@@ -242,7 +242,7 @@ argp_load_db_allowed (argp_t *p_argp)
     return false;
 
   struct stat st;
-  if (stat (p_argp->db_file, &st) == 0)
+  if (stat (p_argp->no_db_flag_file, &st) == 0)
     {
       return false;
     }

@@ -115,18 +115,18 @@ db_save_to_filename (db_t *p_db, const char *filename)
 char *
 db_load_from_filename (db_t *p_db, const char *filename)
 {
-  // magic_len, magic
+  // magic_len
   const size_t db_magic_len = strnlen (DB_MAGIC, DB_CMD_MAX);
   long long fsize = file_size (filename);
   if (fsize < 0LL)
     {
-      return errmsg_fmt_alloc ("[ERROR] %s %s filename=%s", __func__,
+      return errmsg_fmt_alloc ("[ERROR] %s: %s filename=%s", __func__,
                                strerror (errno), filename);
     }
 
   if (fsize < (long long)db_magic_len)
     {
-      return errmsg_fmt_alloc ("[ERROR] %s : Invalid DB File magic! "
+      return errmsg_fmt_alloc ("[ERROR] %s: Invalid DB File magic! "
                                "(filename=%s  atleast=%zu actual=%lld)",
                                __func__, filename, db_magic_len, fsize);
     }
@@ -136,9 +136,22 @@ db_load_from_filename (db_t *p_db, const char *filename)
   fp = fopen (filename, "rb");
   if (NULL == fp)
     {
-      return errmsg_fmt_alloc ("[ERROR] %s %s filename=%s", __func__,
+      return errmsg_fmt_alloc ("[ERROR] %s: %s filename=%s", __func__,
                                strerror (errno), filename);
     }
+
+  // magic
+  char *db_magic_buf = DB_MALLOC (db_magic_len);
+  fread (db_magic_buf, db_magic_len, 1, fp);
+
+  if (strncmp (DB_MAGIC, db_magic_buf, db_magic_len) != 0)
+    {
+      DB_FREE (db_magic_buf);
+      return errmsg_fmt_alloc ("[ERROR] %s: magic mismatch, filename=%s",
+                               __func__, filename);
+    }
+
+  DB_FREE (db_magic_buf);
 
   // total
   size_t tot_entry = 0;

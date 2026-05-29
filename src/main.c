@@ -22,8 +22,23 @@ main (int argc, char **argv)
   argp_parse (argc, argv, &argp);
 
   /* load? */
+  if (argp_load_db_allowed (&argp))
+    {
+      char *load_errmsg = db_load_from_filename (p_db, argp.db_file);
+      if (NULL != load_errmsg)
+        {
+          fputs (load_errmsg, stderr);
+          fputs ("\n", stderr);
+          ERRMSG_FREE (load_errmsg);
+        }
+    }
 
   /* dump & exit? */
+  if (argp.dump_and_exit)
+    {
+      dump_all (stdout);
+      exit (EXIT_SUCCESS);
+    }
 
   /* list script files */
 
@@ -35,12 +50,8 @@ main (int argc, char **argv)
 
   /* print? */
 
-
   exit (EXIT_SUCCESS);
 }
-
-
-
 
 #if 0
   rofi_ask_yn_opts_t yn_opts = {
