@@ -7,10 +7,11 @@
 #include <stdio.h>
 
 #define ARGP_MALLOC malloc
+#define ARGP_STRDUP strdup
 #define ARGP_FREE free
 
-#define SCRIPT_ROFI_NO_DB_FLAG_FILE "~/.no-db-scripts-rofi"
-#define SCRIPT_ROFI_DB_FLAG_FILE "~/.scripts-rofi.hist"
+#define SCRIPT_ROFI_NO_DB_FILE "~/.no-db-scripts-rofi"
+#define SCRIPT_ROFI_DB_FILE "~/.scripts-rofi.hist"
 #define SCRIPT_ROFI_XTERM_COMMAND "x-terminal-emulator -e"
 #define SCRIPT_ROFI_SCRIPT_DIRS                                               \
   "~/local/scripts:~/local/bin:~/.screenlayout:~/P/v3/bin"
@@ -23,6 +24,7 @@ typedef struct
   bool execute;
 
   char *script_dirs;
+  UT_array *__script_dirs_cache;
 
   char *db_file;
   char *term_command;
@@ -36,6 +38,7 @@ typedef struct
   bool use_markup;
 } argp_t;
 
+EXTERN void argp_init (argp_t *p_argp);
 EXTERN void argp_parse (argp_t *p_argp);
 EXTERN void argp_free_internal (argp_t *p_argp);
 
