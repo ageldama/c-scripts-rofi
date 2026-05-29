@@ -8,7 +8,7 @@
 #define ROFI_MALLOC malloc
 #define ROFI_FREE free
 
-typedef void (*rofi_write_fn) (const int fd);
+typedef void (*rofi_write_fn) (const int fd, void *closure);
 
 EXTERN ssize_t fd_write (int fd, const char *s);
 EXTERN ssize_t fd_write_sep (int fd, const char *s, char sep);
@@ -25,11 +25,11 @@ typedef struct
 EXTERN void rofi_free_result (rofi_result_t *p_result);
 
 EXTERN char *rofi_run (UT_array *cmdv, rofi_write_fn write_fn,
-                       rofi_result_t *p_result);
+                       void *write_closure, rofi_result_t *p_result);
 
 EXTERN char *rofi_show_error (const char *message);
 
-EXTERN void rofi_write_nothing (const int fd);
+EXTERN void rofi_write_nothing (const int fd, void *closure);
 
 typedef struct
 {
@@ -49,11 +49,12 @@ typedef struct
 typedef struct
 {
   rofi_result_t base;
+  bool canceled;
   bool answer_yes;
 } rofi_ask_yn_result_t;
 
-EXTERN char *ask_yn (const rofi_ask_yn_opts_t *yn_opts,
-                     rofi_ask_yn_result_t *p_result);
+EXTERN char *rofi_ask_yn (const rofi_ask_yn_opts_t *yn_opts,
+                          rofi_ask_yn_result_t *p_result);
 
 /*
 

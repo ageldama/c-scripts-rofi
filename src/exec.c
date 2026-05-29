@@ -7,6 +7,7 @@
 #include <string.h>
 #include <unistd.h>
 
+// TODO handle string contains "\0"
 char *
 exec_vp (UT_array *cmdv)
 {

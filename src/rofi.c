@@ -65,7 +65,8 @@ rofi_free_result (rofi_result_t *p_result)
 }
 
 char *
-rofi_run (UT_array *cmdv, rofi_write_fn write_fn, rofi_result_t *p_result)
+rofi_run (UT_array *cmdv, rofi_write_fn write_fn, void *write_closure,
+          rofi_result_t *p_result)
 {
   int p_to_c[2]; // parent => child
   int c_to_p[2]; // child => parent
@@ -101,7 +102,7 @@ rofi_run (UT_array *cmdv, rofi_write_fn write_fn, rofi_result_t *p_result)
   close (p_to_c[0]); // where child reads.
   close (c_to_p[1]); // where child writes.
 
-  write_fn (p_to_c[1]);
+  write_fn (p_to_c[1], write_closure);
   close (p_to_c[1]);
 
   int wstatus = 0;

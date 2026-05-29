@@ -1,34 +1,21 @@
 #include "argp.h"
+#include "macrofun.h"
 #include "strs.h"
 #include "utarray.h"
 #include <getopt.h>
 #include <sys/stat.h>
 #include <unistd.h>
 
-#define ARGP_TOGGLE(place) place = !(place)
-
-#define ARGP_FREE_AND_NULLFIFY(place, free_fn)                                \
-  do                                                                          \
-    {                                                                         \
-      free_fn (place);                                                        \
-      place = NULL;                                                           \
-    }                                                                         \
-  while (0)
-
 #define ARGP_FREE_AND_NULLIFY_UNLESS_NULL(place, free_fn)                     \
-  if (NULL != place)                                                          \
-  ARGP_FREE_AND_NULLFIFY (place, free_fn)
+  FREE_AND_NULLIFY_UNLESS_NULL (place, free_fn)
 
 #define ARGP_FREE_AND_NULLIFY_UNLESS_NULL_1(place)                            \
-  ARGP_FREE_AND_NULLIFY_UNLESS_NULL (place, ARGP_FREE)
+  FREE_AND_NULLIFY_UNLESS_NULL (place, ARGP_FREE)
+
+#define ARGP_TOGGLE TOGGLEF
 
 #define ARGP_FREE_AND_STRDUP(place, val)                                      \
-  do                                                                          \
-    {                                                                         \
-      ARGP_FREE_AND_NULLIFY_UNLESS_NULL_1 (place);                            \
-      place = ARGP_STRDUP (val);                                              \
-    }                                                                         \
-  while (0)
+  FREE_AND_STRDUP (place, val, ARGP_FREE, strdup)
 
 void
 argp_free_internal (argp_t *p_argp)

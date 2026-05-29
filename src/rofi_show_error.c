@@ -13,7 +13,7 @@ rofi_show_error (const char *message)
   utarray_push_back (cmdv, &cmdv_[2]);
 
   rofi_result_t result;
-  char *errmsg = rofi_run (cmdv, rofi_write_nothing, &result);
+  char *errmsg = rofi_run (cmdv, rofi_write_nothing, NULL, &result);
   if (NULL != errmsg)
     {
       utarray_free (cmdv);
@@ -27,7 +27,8 @@ rofi_show_error (const char *message)
 }
 
 void
-rofi_write_nothing (const int fd)
+rofi_write_nothing (const int fd, void *closure)
 {
   (void)fd;
+  (void)closure;
 }
