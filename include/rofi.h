@@ -41,7 +41,6 @@ typedef struct
 typedef struct
 {
   rofi_common_opts_t common;
-
   char *label_y;
   char *label_n;
 } rofi_ask_yn_opts_t;
@@ -56,27 +55,32 @@ typedef struct
 EXTERN char *rofi_ask_yn (const rofi_ask_yn_opts_t *yn_opts,
                           rofi_ask_yn_result_t *p_result);
 
-/*
+typedef struct
+{
+  rofi_common_opts_t common;
+  bool use_markup;
+  char *run_alt_tag;
+} rofi_select_list_opts_t;
 
-struct rofi_select_list_opts {
-    rofi_common_opts common_opts;
-    bool use_markup;
-    std::string run_alt_tag;
-};
+typedef bool (*is_run_alt_fn) (char *cmd, void *closure);
+typedef bool (*toggle_run_alt_fn) (char *cmd, void *closure);
 
-class run_alt_callbacks {
-public:
-    virtual auto is_run_alt(const std::string& cmd) -> bool = 0;
-    virtual auto toggle_run_alt(const std::string& cmd) -> bool = 0;
-    virtual ~run_alt_callbacks() = default;
-};
+typedef struct
+{
+  is_run_alt_fn is_run_alt;
+  toggle_run_alt_fn toggle_run_alt;
+} rofi_select_list_callbacks_t;
 
-auto select_list(const rofi_select_list_opts& common_opts,
-    run_alt_callbacks& callbacks, const SR::string_vector& sel_list)
-    -> std::optional<rofi_result>;
+typedef struct
+{
+  rofi_result_t base;
+  bool canceled;
+  char *selected;
+} rofi_select_list_result_t;
 
-}
-
-*/
+char *rofi_select_list (const rofi_select_list_opts_t *p_opts, UT_array *list,
+                        rofi_select_list_callbacks_t *p_callbacks,
+                        void *callback_data,
+                        rofi_select_list_result_t *p_result);
 
 #endif /* ROFI_H */
