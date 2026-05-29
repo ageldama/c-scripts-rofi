@@ -25,7 +25,7 @@ typedef struct
 
 typedef struct
 {
-  db_cmd_entry_t* p_cmd_hash;
+  db_cmd_entry_t *p_cmd_hash;
 } db_t;
 
 EXTERN db_t *db_init (void);

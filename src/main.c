@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "main.h"
+
 #include "argp.h"
 #include "db.h"
 #include "errmsg.h"
@@ -8,11 +10,6 @@
 #include "file_find.h"
 #include "rofi.h"
 #include "strs.h"
-
-argp_t argp;
-db_t *p_db = NULL;
-
-void cleanup (void);
 
 int
 main (int argc, char **argv)
@@ -23,6 +20,27 @@ main (int argc, char **argv)
 
   argp_init (&argp);
   argp_parse (argc, argv, &argp);
+
+  /* load? */
+
+  /* dump & exit? */
+
+  /* list script files */
+
+  /* select in list */
+
+  /* save? */
+
+  /* exec? */
+
+  /* print? */
+
+
+  exit (EXIT_SUCCESS);
+}
+
+
+
 
 #if 0
   rofi_ask_yn_opts_t yn_opts = {
@@ -134,18 +152,3 @@ main (int argc, char **argv)
     printf ("%s / %ld / %d\n", curr->cmd, curr->last_epoch, curr->run_alt);
   }
 #endif
-
-  exit (EXIT_SUCCESS);
-}
-
-void
-cleanup (void)
-{
-  if (p_db != NULL)
-    {
-      db_free (p_db);
-      p_db = NULL;
-    }
-
-  argp_free_internal (&argp);
-}

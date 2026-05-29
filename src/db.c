@@ -9,7 +9,7 @@
 db_t *
 db_init (void)
 {
-  db_t *p_db = DB_MALLOC(sizeof(db_t));
+  db_t *p_db = DB_MALLOC (sizeof (db_t));
   p_db->p_cmd_hash = NULL;
   return p_db;
 }
@@ -17,21 +17,22 @@ db_init (void)
 void
 db_free (db_t *p_db)
 {
-  db_cmd_entry_t* p_cmd_hash = p_db->p_cmd_hash;
+  db_cmd_entry_t *p_cmd_hash = p_db->p_cmd_hash;
 
-  if(p_cmd_hash != NULL) {
-    db_cmd_entry_t *p_curr;
-    db_cmd_entry_t *p_tmp;
+  if (p_cmd_hash != NULL)
+    {
+      db_cmd_entry_t *p_curr;
+      db_cmd_entry_t *p_tmp;
 
-    HASH_ITER (hh, p_cmd_hash, p_curr, p_tmp)
+      HASH_ITER (hh, p_cmd_hash, p_curr, p_tmp)
       {
         HASH_DEL (p_cmd_hash, p_curr);
         DB_FREE (p_curr->cmd);
         DB_FREE (p_curr);
       }
-  }
+    }
 
-  DB_FREE(p_db);
+  DB_FREE (p_db);
 }
 
 void
