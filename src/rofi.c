@@ -24,7 +24,7 @@ fd_write_sep (int fd, const char *s, char sep)
 #define fd_slurp_buflen 4096
 
 char *
-fd_slurp (int fd)
+fd_slurp_alloc (int fd)
 {
   UT_string *sbuf;
   utstring_new (sbuf);
@@ -48,4 +48,14 @@ fd_slurp (int fd)
   utstring_free (sbuf);
 
   return result;
+}
+
+void
+rofi_free_result (rofi_result_t *p_result)
+{
+  if (NULL == p_result || NULL == p_result->stdout)
+    return;
+
+  ROFI_FREE (p_result->stdout);
+  p_result->stdout = NULL;
 }

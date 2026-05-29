@@ -13,7 +13,7 @@ typedef void (*rofi_write_fn) (const int fd);
 EXTERN ssize_t fd_write (int fd, const char *s);
 EXTERN ssize_t fd_write_sep (int fd, const char *s, char sep);
 
-EXTERN char *fd_slurp (int fd);
+EXTERN char *fd_slurp_alloc (int fd);
 
 typedef struct
 {
