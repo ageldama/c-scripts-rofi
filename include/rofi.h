@@ -24,7 +24,7 @@ typedef struct
 
 EXTERN void rofi_free_result (rofi_result_t *p_result);
 
-EXTERN char *rofi_run (UT_array *cmdv, const rofi_write_fn *write_fn,
+EXTERN char *rofi_run (UT_array *cmdv, rofi_write_fn write_fn,
                        rofi_result_t *p_result);
 
 /*

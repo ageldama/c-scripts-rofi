@@ -1,8 +1,12 @@
 #include "rofi.h"
+#include "errmsg.h"
+#include "exec.h"
 #include "utstring.h"
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/wait.h>
 #include <unistd.h>
 
 ssize_t
@@ -58,4 +62,58 @@ rofi_free_result (rofi_result_t *p_result)
 
   ROFI_FREE (p_result->stdout);
   p_result->stdout = NULL;
+}
+
+char *
+rofi_run (UT_array *cmdv, rofi_write_fn write_fn, rofi_result_t *p_result)
+{
+  int p_to_c[2]; // parent => child
+  int c_to_p[2]; // child => parent
+
+  if (pipe (p_to_c) == -1 || pipe (c_to_p) == -1)
+    {
+      return errmsg_fmt_alloc ("[ERROR] %s = %s", __func__, strerror (errno));
+    }
+
+  pid_t pid = fork ();
+
+  if (pid == 0)
+    {
+      // CHILD
+
+      close (p_to_c[1]); // where parent writes.
+      close (c_to_p[0]); // where parent reads.
+
+      dup2 (p_to_c[0], STDIN_FILENO);
+      close (p_to_c[0]);
+
+      dup2 (c_to_p[1], STDOUT_FILENO);
+      close (c_to_p[1]);
+
+      char *exec_errmsg = exec_vp (cmdv);
+
+      fputs (exec_errmsg, stderr);
+      ERRMSG_FREE (exec_errmsg);
+      exit (EXIT_FAILURE);
+    }
+
+  // Parent
+  close (p_to_c[0]); // where child reads.
+  close (c_to_p[1]); // where child writes.
+
+  write_fn (p_to_c[1]);
+  close (p_to_c[1]);
+
+  int wstatus = 0;
+  pid_t result = waitpid (pid, &wstatus, 0);
+  (void)result;
+
+  char *stdout = fd_slurp_alloc (c_to_p[0]);
+  close (c_to_p[0]);
+
+  p_result->stdout = stdout;
+  p_result->alt = false;
+  p_result->exitcode = wstatus;
+
+  return NULL; // OK.
 }
