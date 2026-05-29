@@ -1,9 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "argp.h"
 #include "db.h"
 #include "strs.h"
 
+argp_t argp;
 db_t *p_db = NULL;
 
 void cleanup ();
@@ -11,12 +13,12 @@ void cleanup ();
 int
 main (int argc, char **argv)
 {
-  (void)argc;
-  (void)argv;
-
   atexit (cleanup);
 
   p_db = db_init ();
+
+  argp_init (&argp);
+  argp_parse (argc, argv, &argp);
 
 #if 0
   UT_array* script_dirs = str_split(
@@ -60,4 +62,6 @@ cleanup ()
       db_free (p_db);
       p_db = NULL;
     }
+
+  argp_free_internal (&argp);
 }

@@ -7,7 +7,7 @@
 #include <sys/stat.h>
 
 db_t *
-db_init ()
+db_init (void)
 {
   return NULL;
 }

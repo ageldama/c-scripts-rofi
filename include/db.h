@@ -22,7 +22,7 @@ typedef struct
   UT_hash_handle hh;
 } db_t;
 
-EXTERN db_t *db_init ();
+EXTERN db_t *db_init (void);
 
 EXTERN void db_free (db_t *p_db);
 

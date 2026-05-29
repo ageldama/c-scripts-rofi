@@ -30,7 +30,7 @@ typedef struct
   char *term_command;
   bool dump_and_exit;
   char *exec_wrapper;
-  char *file_regexes;
+  char *file_regex;
 
   bool ignorecase;
   char *no_db_flag_file;
@@ -39,10 +39,10 @@ typedef struct
 } argp_t;
 
 EXTERN void argp_init (argp_t *p_argp);
-EXTERN void argp_parse (int argc, const char** argv, argp_t *p_argp);
+EXTERN void argp_parse (int argc, char *argv[], argp_t *p_argp);
 EXTERN void argp_free_internal (argp_t *p_argp);
 
-EXTERN void argp_print_usage (FILE *fp);
+EXTERN void argp_print_usage (argp_t *p_argp, FILE *fp);
 
 EXTERN bool argp_load_db_allowed (argp_t *p_argp);
 EXTERN bool argp_save_db_allowed (argp_t *p_argp);
