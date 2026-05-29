@@ -171,3 +171,63 @@ long long file_size(const char *filename) {
     }
     return -1; // error
 }
+
+
+db_t *db_get (db_t *p_db, const char *cmd)
+{
+  db_t *p_found = NULL;
+  HASH_FIND_STR (p_db, cmd, p_found);
+  return p_found;
+}
+
+
+time_t db_get_last_epoch (db_t *p_db, const char *cmd)
+{
+  db_t* p_entry = db_get(p_db, cmd);
+  if(p_entry != NULL) {
+    return p_entry->last_epoch;
+  } else {
+    return 0;
+  }
+}
+
+time_t db_set_last_epoch (db_t **pp_db, const char *cmd,
+                                 time_t last_epoch)
+{
+    db_t* p_entry = db_get(*pp_db, cmd);
+    if (p_entry != NULL) {
+      p_entry->last_epoch = last_epoch;
+      return p_entry->last_epoch;
+    } else {
+      db_add_args_copying(pp_db, cmd, last_epoch, /*run_alt*/ false);
+      return last_epoch;
+    }
+}
+
+bool db_is_run_alt (db_t *p_db, const char *cmd)
+{
+  db_t* p_entry = db_get(p_db, cmd);
+  if(p_entry != NULL) {
+    return p_entry->run_alt;
+  } else {
+    return false;
+  }
+}
+
+bool db_set_run_alt (db_t **pp_db, const char *cmd, bool run_alt)
+{
+  db_t* p_entry = db_get(*pp_db, cmd);
+    if (p_entry != NULL) {
+      p_entry->run_alt = run_alt;
+      return p_entry->run_alt;
+    } else {
+      db_add_args_copying(pp_db, cmd, /*last_epoch*/0, run_alt);
+      return run_alt;
+    }
+}
+
+bool db_toggle_run_alt (db_t **pp_db, const char *cmd)
+{
+  bool curr = db_is_run_alt(*pp_db, cmd);
+  return db_set_run_alt(pp_db, cmd, !curr);
+}
