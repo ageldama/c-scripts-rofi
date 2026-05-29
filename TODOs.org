@@ -1,9 +1,9 @@
-* TODO v1.0 [3/9]
+* TODO v1.0 [4/9]
   1) [X] db
   2) [X] argp
   3) [X] tildeexpand
      
-  4) [ ] file-find
+  4) [X] file-find
   5) [ ] regex
 
   6) [ ] exec

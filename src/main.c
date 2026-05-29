@@ -3,6 +3,7 @@
 
 #include "argp.h"
 #include "db.h"
+#include "file_find.h"
 #include "strs.h"
 
 argp_t argp;
@@ -19,6 +20,28 @@ main (int argc, char **argv)
 
   argp_init (&argp);
   argp_parse (argc, argv, &argp);
+
+  UT_array *files = NULL;
+  utarray_new (files, &ut_str_icd);
+
+  file_find_args_t file_find_args = {
+    .dir_matcher = NULL,
+    .dir_matcher_closure = NULL,
+    .file_matcher = only_file_matcher,
+    .file_matcher_closure = NULL,
+    .recurse = true,
+  };
+
+  file_find_list_multiple (files, argp_get_script_dirs_owned (&argp),
+                           &file_find_args);
+
+  char **pp_file = NULL;
+  while ((pp_file = (char **)utarray_next (files, pp_file)))
+    {
+      printf ("[%s]\n", *pp_file);
+    }
+
+  utarray_free (files);
 
 #if 0
   UT_array* script_dirs = str_split(
