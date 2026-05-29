@@ -9,34 +9,40 @@
 db_t *
 db_init (void)
 {
-  return NULL;
+  db_t *p_db = DB_MALLOC(sizeof(db_t));
+  p_db->p_cmd_hash = NULL;
+  return p_db;
 }
 
 void
 db_free (db_t *p_db)
 {
-  db_t *p_curr;
-  db_t *p_tmp;
+  db_cmd_entry_t* p_cmd_hash = p_db->p_cmd_hash;
 
-  HASH_ITER (hh, p_db, p_curr, p_tmp)
-  {
-    HASH_DEL (p_db, p_curr);
-    DB_FREE (p_curr->cmd);
-    DB_FREE (p_curr);
+  if(p_cmd_hash != NULL) {
+    db_cmd_entry_t *p_curr;
+    db_cmd_entry_t *p_tmp;
+
+    HASH_ITER (hh, p_cmd_hash, p_curr, p_tmp)
+      {
+        HASH_DEL (p_cmd_hash, p_curr);
+        DB_FREE (p_curr->cmd);
+        DB_FREE (p_curr);
+      }
   }
+
+  DB_FREE(p_db);
 }
 
 void
-db_add (db_t **pp_db, db_t *p_entry)
+db_add (db_t *p_db, db_cmd_entry_t *p_entry)
 {
-  db_t *p_db = *pp_db;
-  db_t *p_found = NULL;
+  db_cmd_entry_t *p_found = NULL;
 
-  HASH_FIND_STR (p_db, p_entry->cmd, p_found);
+  HASH_FIND_STR (p_db->p_cmd_hash, p_entry->cmd, p_found);
   if (p_found == NULL)
     {
-      HASH_ADD_STR (p_db, cmd, p_entry);
-      *pp_db = p_db;
+      HASH_ADD_STR (p_db->p_cmd_hash, cmd, p_entry);
     }
   else
     {
@@ -46,11 +52,11 @@ db_add (db_t **pp_db, db_t *p_entry)
 }
 
 void
-db_add_args_copying (db_t **pp_db, const char *cmd, time_t last_epoch,
+db_add_args_copying (db_t *p_db, const char *cmd, time_t last_epoch,
                      bool run_alt)
 {
-  db_t *p_entry = DB_MALLOC (sizeof (db_t));
-  memset (p_entry, 0, sizeof (db_t));
+  db_cmd_entry_t *p_entry = DB_MALLOC (sizeof (db_cmd_entry_t));
+  memset (p_entry, 0, sizeof (db_cmd_entry_t));
   //
   size_t cmd_len = strnlen (cmd, DB_CMD_MAX);
   char *cmd2 = DB_MALLOC (cmd_len + 1);
@@ -61,7 +67,7 @@ db_add_args_copying (db_t **pp_db, const char *cmd, time_t last_epoch,
   p_entry->run_alt = run_alt;
   p_entry->last_epoch = last_epoch;
   //
-  db_add (pp_db, p_entry);
+  db_add (p_db, p_entry);
 }
 
 char *
@@ -80,14 +86,14 @@ db_save_to_filename (db_t *p_db, const char *filename)
   fwrite (DB_MAGIC, db_magic_len, 1, fp);
 
   // total
-  size_t tot_entry = HASH_COUNT (p_db);
+  size_t tot_entry = HASH_COUNT (p_db->p_cmd_hash);
   fwrite (&tot_entry, sizeof (tot_entry), 1, fp);
 
   // foreach:entry
-  db_t *p_curr;
-  db_t *p_tmp;
+  db_cmd_entry_t *p_curr;
+  db_cmd_entry_t *p_tmp;
 
-  HASH_ITER (hh, p_db, p_curr, p_tmp)
+  HASH_ITER (hh, p_db->p_cmd_hash, p_curr, p_tmp)
   {
     // entry: [cmd-len, cmd]
     size_t cmd_len = strnlen (p_curr->cmd, DB_CMD_MAX);
@@ -106,7 +112,7 @@ db_save_to_filename (db_t *p_db, const char *filename)
 }
 
 char *
-db_load_from_filename (db_t **pp_db, const char *filename)
+db_load_from_filename (db_t *p_db, const char *filename)
 {
   // magic_len, magic
   const size_t db_magic_len = strnlen (DB_MAGIC, DB_CMD_MAX);
@@ -155,12 +161,12 @@ db_load_from_filename (db_t **pp_db, const char *filename)
       char run_alt_ch = fgetc (fp);
 
       //
-      db_t *p_entry = DB_MALLOC (sizeof (db_t));
+      db_cmd_entry_t *p_entry = DB_MALLOC (sizeof (db_cmd_entry_t));
       p_entry->cmd = cmd;
       p_entry->last_epoch = last_epoch;
       p_entry->run_alt = run_alt_ch > 0;
 
-      HASH_ADD_STR (*pp_db, cmd, p_entry);
+      HASH_ADD_STR (p_db->p_cmd_hash, cmd, p_entry);
     }
 
   // ok: no error
@@ -178,18 +184,18 @@ file_size (const char *filename)
   return -1; // error
 }
 
-db_t *
+db_cmd_entry_t *
 db_get (db_t *p_db, const char *cmd)
 {
-  db_t *p_found = NULL;
-  HASH_FIND_STR (p_db, cmd, p_found);
+  db_cmd_entry_t *p_found = NULL;
+  HASH_FIND_STR (p_db->p_cmd_hash, cmd, p_found);
   return p_found;
 }
 
 time_t
 db_get_last_epoch (db_t *p_db, const char *cmd)
 {
-  db_t *p_entry = db_get (p_db, cmd);
+  db_cmd_entry_t *p_entry = db_get (p_db, cmd);
   if (p_entry != NULL)
     {
       return p_entry->last_epoch;
@@ -201,9 +207,9 @@ db_get_last_epoch (db_t *p_db, const char *cmd)
 }
 
 time_t
-db_set_last_epoch (db_t **pp_db, const char *cmd, time_t last_epoch)
+db_set_last_epoch (db_t *p_db, const char *cmd, time_t last_epoch)
 {
-  db_t *p_entry = db_get (*pp_db, cmd);
+  db_cmd_entry_t *p_entry = db_get (p_db, cmd);
   if (p_entry != NULL)
     {
       p_entry->last_epoch = last_epoch;
@@ -211,7 +217,7 @@ db_set_last_epoch (db_t **pp_db, const char *cmd, time_t last_epoch)
     }
   else
     {
-      db_add_args_copying (pp_db, cmd, last_epoch, /*run_alt*/ false);
+      db_add_args_copying (p_db, cmd, last_epoch, /*run_alt*/ false);
       return last_epoch;
     }
 }
@@ -219,7 +225,7 @@ db_set_last_epoch (db_t **pp_db, const char *cmd, time_t last_epoch)
 bool
 db_is_run_alt (db_t *p_db, const char *cmd)
 {
-  db_t *p_entry = db_get (p_db, cmd);
+  db_cmd_entry_t *p_entry = db_get (p_db, cmd);
   if (p_entry != NULL)
     {
       return p_entry->run_alt;
@@ -231,9 +237,9 @@ db_is_run_alt (db_t *p_db, const char *cmd)
 }
 
 bool
-db_set_run_alt (db_t **pp_db, const char *cmd, bool run_alt)
+db_set_run_alt (db_t *p_db, const char *cmd, bool run_alt)
 {
-  db_t *p_entry = db_get (*pp_db, cmd);
+  db_cmd_entry_t *p_entry = db_get (p_db, cmd);
   if (p_entry != NULL)
     {
       p_entry->run_alt = run_alt;
@@ -241,16 +247,16 @@ db_set_run_alt (db_t **pp_db, const char *cmd, bool run_alt)
     }
   else
     {
-      db_add_args_copying (pp_db, cmd, /*last_epoch*/ 0, run_alt);
+      db_add_args_copying (p_db, cmd, /*last_epoch*/ 0, run_alt);
       return run_alt;
     }
 }
 
 bool
-db_toggle_run_alt (db_t **pp_db, const char *cmd)
+db_toggle_run_alt (db_t *p_db, const char *cmd)
 {
-  bool curr = db_is_run_alt (*pp_db, cmd);
-  return db_set_run_alt (pp_db, cmd, !curr);
+  bool curr = db_is_run_alt (p_db, cmd);
+  return db_set_run_alt (p_db, cmd, !curr);
 }
 
 db_t *p_db_sort = NULL;

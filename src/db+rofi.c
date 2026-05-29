@@ -10,5 +10,5 @@ bool db_rofi_is_run_alt(char* cmd, void* closure)
 bool db_rofi_toggle_run_alt(char * cmd, void* closure)
 {
   db_t* p_db = (db_t*) closure;
-  // TODO
+  return db_toggle_run_alt(p_db, cmd);
 }
