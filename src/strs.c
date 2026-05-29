@@ -1,50 +1,84 @@
-#include <string.h>
 #include <ctype.h>
+#include <string.h>
+#include <wordexp.h>
+
 #include "strs.h"
 
-char* str_trim_both_alloc(const char* str)
+char *
+str_trim_both_alloc (const char *str)
 {
-  if (str == NULL) { return NULL; }
+  if (str == NULL)
+    return NULL;
 
-  char *lstr = (char *) str;
-  while (isspace((unsigned char)*lstr)) {
-    lstr++;
-  }
+  while (*str && isspace ((unsigned char)*str))
+    {
+      str++;
+    }
 
-  char *rstr = ((char *)str) + strlen(str) - 1;
-  while (rstr > str && isspace((unsigned char)*rstr)) {
-    rstr--;
-  }
+  size_t len = strlen (str);
+  while (len > 0 && isspace ((unsigned char)str[len - 1]))
+    {
+      len--;
+    }
 
-  size_t trimmed_len = rstr - lstr;
-  if (trimmed_len < 1) return NULL;
+  char *new_str = (char *)STRS_MALLOC (len + 1);
+  if (new_str == NULL)
+    {
+      return NULL;
+    }
 
-  char *result = STRS_MALLOC(trimmed_len+1);
-  memset(result, 0, trimmed_len+1);
-  strncpy(result, lstr, trimmed_len);
+  memcpy (new_str, str, len);
+  new_str[len] = '\0';
 
-  return result;
+  return new_str;
 }
 
-UT_array* str_split(const char* str, const char* delim)
+UT_array *
+str_split (const char *str, const char *delim)
 {
-  UT_array* results = NULL;
-  utarray_new(results, &ut_str_icd);
+  UT_array *results = NULL;
+  utarray_new (results, &ut_str_icd);
 
-  if (str == NULL) { return results; }
- 
+  if (str == NULL)
+    {
+      return results;
+    }
+
   char *saveptr;
-  char *str_copy = strdup(str);
+  char *str_copy = strdup (str);
 
-  char *token = strtok_r((char*)str_copy, delim, &saveptr);
-  while (token != NULL) {
-       if (strlen(token) > 0) {
-            utarray_push_back(results, &token);
+  char *token = strtok_r ((char *)str_copy, delim, &saveptr);
+  while (token != NULL)
+    {
+      if (strlen (token) > 0)
+        {
+          utarray_push_back (results, &token);
         }
-    token = strtok_r(NULL, delim, &saveptr);
-  }
+      token = strtok_r (NULL, delim, &saveptr);
+    }
 
-  free(str_copy);
+  free (str_copy);
 
   return results;
+}
+
+void
+str_expand_tilde (const char *str, char *outp, const size_t outp_size)
+{
+  wordexp_t wexp;
+
+  if (wordexp (str, &wexp, WRDE_NOCMD) == 0)
+    {
+      memset (outp, 0, outp_size);
+      strncpy (outp, wexp.we_wordv[0], outp_size);
+      wordfree (&wexp);
+    }
+}
+
+char *
+str_expand_tilde_alloc (const char *str)
+{
+  char *buf = STRS_MALLOC (STRS_TILDE_EXPAND_MAX);
+  str_expand_tilde (str, buf, STRS_TILDE_EXPAND_MAX - 1);
+  return buf;
 }

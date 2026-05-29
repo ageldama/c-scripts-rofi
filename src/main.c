@@ -18,7 +18,6 @@ main (int argc, char **argv)
 
   p_db = db_init ();
 
-
 #if 0
   UT_array* script_dirs = str_split(
                                     "~/local/scripts:~/local/bin:~/.screenlayout:~/P/v3/bin", ":");
@@ -27,13 +26,15 @@ main (int argc, char **argv)
     char **pp = NULL;
 
     while ((pp = (char **)utarray_next(script_dirs, pp))) {
-      printf("[%s]\n", *pp);
+      char *before = *pp;
+      char *expanded = str_expand_tilde_alloc(before);
+      printf("[%s]\n", expanded);
+      STRS_FREE(expanded);
     }
 
     utarray_free(script_dirs);
   }
 #endif
-
 
 #if 0
   db_add_args_copying (&p_db, "foo", 1, false);

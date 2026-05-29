@@ -30,7 +30,7 @@ EXTERN void db_add (db_t **pp_db, db_t *p_entry);
 EXTERN void db_add_args_copying (db_t **pp_db, const char *cmd,
                                  time_t last_epoch, bool run_alt);
 
-EXTERN char* db_save_to_filename (db_t *p_db, const char *filename);
+EXTERN char *db_save_to_filename (db_t *p_db, const char *filename);
 
 EXTERN char *db_load_from_filename (db_t **pp_db, const char *filename);
 
@@ -47,6 +47,6 @@ EXTERN bool db_toggle_run_alt (db_t **pp_db, const char *cmd);
 
 EXTERN bool db_is_run_alt (db_t *p_db, const char *cmd);
 
-EXTERN long long file_size(const char *filename);
+EXTERN long long file_size (const char *filename);
 
 #endif /* DB_H */

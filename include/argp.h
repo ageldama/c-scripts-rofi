@@ -9,41 +9,41 @@
 #define ARGP_MALLOC malloc
 #define ARGP_FREE free
 
-
 #define SCRIPT_ROFI_NO_DB_FLAG_FILE "~/.no-db-scripts-rofi"
 #define SCRIPT_ROFI_DB_FLAG_FILE "~/.scripts-rofi.hist"
 #define SCRIPT_ROFI_XTERM_COMMAND "x-terminal-emulator -e"
-#define SCRIPT_ROFI_SCRIPT_DIRS                                      \
-    "~/local/scripts:~/local/bin:~/.screenlayout:~/P/v3/bin"
+#define SCRIPT_ROFI_SCRIPT_DIRS                                               \
+  "~/local/scripts:~/local/bin:~/.screenlayout:~/P/v3/bin"
 #define SCRIPT_ROFI_RUN_ALT_TAG " <span color='#FF69B4'>[TERM]</span>"
 
-typedef struct {
+typedef struct
+{
   bool print;
   bool save;
   bool execute;
 
-  char* script_dirs;
+  char *script_dirs;
 
-  char* db_file;
-  char* term_command;
+  char *db_file;
+  char *term_command;
   bool dump_and_exit;
-  char* exec_wrapper;
-  char* file_regexes;
+  char *exec_wrapper;
+  char *file_regexes;
 
   bool ignorecase;
-  char* no_db_flag_file;
-  char* run_alt_tag;
+  char *no_db_flag_file;
+  char *run_alt_tag;
   bool use_markup;
 } argp_t;
 
-EXTERN void argp_parse(argp_t *p_argp);
-EXTERN void argp_free_internal(argp_t *p_argp);
+EXTERN void argp_parse (argp_t *p_argp);
+EXTERN void argp_free_internal (argp_t *p_argp);
 
-EXTERN void argp_print_usage(FILE* fp);
+EXTERN void argp_print_usage (FILE *fp);
 
-EXTERN bool argp_load_db_allowed(argp_t* p_argp);
-EXTERN bool argp_save_db_allowed(argp_t* p_argp);
+EXTERN bool argp_load_db_allowed (argp_t *p_argp);
+EXTERN bool argp_save_db_allowed (argp_t *p_argp);
 
-EXTERN UT_array* argp_get_script_dirs(const char * script_dirs);
+EXTERN UT_array *argp_get_script_dirs (const char *script_dirs);
 
 #endif /* ARGP_H */

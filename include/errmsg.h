@@ -4,9 +4,8 @@
 #include "externc.h"
 
 #define ERRMSG_MALLOC malloc
-#define ERRMSG_FREE   free
+#define ERRMSG_FREE free
 
-EXTERN char *errmsg_fmt_alloc(const char* fmt, ...);
-
+EXTERN char *errmsg_fmt_alloc (const char *fmt, ...);
 
 #endif /* ERRMSG_H */
