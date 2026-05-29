@@ -47,4 +47,6 @@ EXTERN bool db_toggle_run_alt (db_t **pp_db, const char *cmd);
 
 EXTERN bool db_is_run_alt (db_t *p_db, const char *cmd);
 
+EXTERN long long file_size(const char *filename);
+
 #endif /* DB_H */
