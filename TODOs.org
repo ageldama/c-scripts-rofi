@@ -1,11 +1,14 @@
-* TODO v1.0 [0/9]
-  1) [ ] db
-  2) [ ] argp
-  3) [ ] exec
-  4) [ ] rofi/ask-yn
-  5) [ ] rofi/select-list
-  6) [ ] file-find
-  7) [ ] regex
-  8) [ ] tildeexpand
+* TODO v1.0 [3/9]
+  1) [X] db
+  2) [X] argp
+  3) [X] tildeexpand
+     
+  4) [ ] file-find
+  5) [ ] regex
+
+  6) [ ] exec
+  7) [ ] rofi/ask-yn
+  8) [ ] rofi/select-list
+     
   9) [ ] tool: clang-tidy
 

@@ -2,7 +2,10 @@
 #include "strs.h"
 #include "utarray.h"
 #include <getopt.h>
+#include <sys/stat.h>
 #include <unistd.h>
+
+#define ARGP_TOGGLE(place) place = !(place)
 
 #define ARGP_FREE_AND_NULLFIFY(place, free_fn)                                \
   do                                                                          \
@@ -18,6 +21,14 @@
 
 #define ARGP_FREE_AND_NULLIFY_UNLESS_NULL_1(place)                            \
   ARGP_FREE_AND_NULLIFY_UNLESS_NULL (place, ARGP_FREE)
+
+#define ARGP_FREE_AND_STRDUP(place, val)                                      \
+  do                                                                          \
+    {                                                                         \
+      ARGP_FREE_AND_NULLIFY_UNLESS_NULL_1 (place);                            \
+      place = ARGP_STRDUP (val);                                              \
+    }                                                                         \
+  while (0)
 
 void
 argp_free_internal (argp_t *p_argp)
@@ -97,7 +108,54 @@ argp_parse (int argc, char *argv[], argp_t *p_argp)
 
       switch (opt)
         {
-          // TODO
+        case 'p':
+          ARGP_TOGGLE (p_argp->print);
+          break;
+
+        case 's':
+          ARGP_TOGGLE (p_argp->save);
+          break;
+
+        case 'e':
+          ARGP_TOGGLE (p_argp->execute);
+          break;
+
+        case 'P':
+          ARGP_TOGGLE (p_argp->dump_and_exit);
+          break;
+
+        case 'S':
+          argp_set_script_dirs (p_argp, optarg);
+          break;
+
+        case 'D':
+          ARGP_FREE_AND_STRDUP (p_argp->db_file, optarg);
+          break;
+
+        case 'T':
+          ARGP_FREE_AND_STRDUP (p_argp->term_command, optarg);
+          break;
+
+        case 'W':
+          ARGP_FREE_AND_STRDUP (p_argp->exec_wrapper, optarg);
+          break;
+
+        case '/':
+          ARGP_FREE_AND_STRDUP (p_argp->file_regex, optarg);
+          break;
+
+        case 'A':
+          ARGP_FREE_AND_STRDUP (p_argp->run_alt_tag, optarg);
+          break;
+
+        case 'm':
+          ARGP_TOGGLE (p_argp->use_markup);
+          break;
+
+        case 'i':
+          ARGP_TOGGLE (p_argp->ignorecase);
+          break;
+
         case '?':
         case 'h':
         default:
@@ -190,7 +248,24 @@ argp_set_script_dirs (argp_t *p_argp, char *script_dirs)
   p_argp->script_dirs = ARGP_STRDUP (script_dirs);
 }
 
+bool
+argp_load_db_allowed (argp_t *p_argp)
+{
+  if (NULL == p_argp || NULL == p_argp->db_file)
+    return false;
 
-// TODO  bool argp_load_db_allowed (argp_t *p_argp)
+  struct stat st;
+  if (stat (p_argp->db_file, &st) == 0)
+    {
+      return false;
+    }
 
-// TODO bool argp_save_db_allowed (argp_t *p_argp)
+  return true;
+}
+
+bool
+argp_save_db_allowed (argp_t *p_argp)
+{
+  bool load = argp_load_db_allowed (p_argp);
+  return load && p_argp->save;
+}
