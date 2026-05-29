@@ -1,7 +1,7 @@
 #include "rofi.h"
 #include "utarray.h"
 
-void
+char *
 rofi_show_error (const char *message)
 {
   UT_array *cmdv = NULL;
@@ -13,10 +13,17 @@ rofi_show_error (const char *message)
   utarray_push_back (cmdv, &cmdv_[2]);
 
   rofi_result_t result;
-  rofi_run (cmdv, rofi_write_nothing, &result);
+  char *errmsg = rofi_run (cmdv, rofi_write_nothing, &result);
+  if (NULL != errmsg)
+    {
+      utarray_free (cmdv);
+      return errmsg;
+    }
 
   ROFI_FREE (result.stdout);
   utarray_free (cmdv);
+
+  return NULL; // OK
 }
 
 void
