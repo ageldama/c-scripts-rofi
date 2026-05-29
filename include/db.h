@@ -11,6 +11,8 @@
 
 #define DB_CMD_MAX 8192
 
+#define DB_MAGIC "C-SCRIPTS-ROFI-1.0"
+
 typedef struct
 {
   char *cmd; /* Key */
