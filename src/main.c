@@ -8,7 +8,7 @@
 argp_t argp;
 db_t *p_db = NULL;
 
-void cleanup ();
+void cleanup (void);
 
 int
 main (int argc, char **argv)
@@ -55,7 +55,7 @@ main (int argc, char **argv)
 }
 
 void
-cleanup ()
+cleanup (void)
 {
   if (p_db != NULL)
     {
