@@ -1,6 +1,23 @@
 #include "argp.h"
+#include "strs.h"
+#include "utarray.h"
 #include <getopt.h>
 #include <unistd.h>
+
+#define ARGP_FREE_AND_NULLFIFY(place, free_fn)                                \
+  do                                                                          \
+    {                                                                         \
+      free_fn (place);                                                        \
+      place = NULL;                                                           \
+    }                                                                         \
+  while (0)
+
+#define ARGP_FREE_AND_NULLIFY_UNLESS_NULL(place, free_fn)                     \
+  if (NULL != place)                                                          \
+  ARGP_FREE_AND_NULLFIFY (place, free_fn)
+
+#define ARGP_FREE_AND_NULLIFY_UNLESS_NULL_1(place)                            \
+  ARGP_FREE_AND_NULLIFY_UNLESS_NULL (place, ARGP_FREE)
 
 void
 argp_free_internal (argp_t *p_argp)
@@ -14,25 +31,13 @@ argp_free_internal (argp_t *p_argp)
       p_argp->__script_dirs_cache = NULL;
     }
 
-#define ARGP_FREE_AND_NULLFIFY(place)                                         \
-  do                                                                          \
-    {                                                                         \
-      ARGP_FREE (place);                                                      \
-      place = NULL;                                                           \
-    }                                                                         \
-  while (0)
-
-#define ARGP_FREE_AND_NULLIFY_UNLESS_NULL(place)                              \
-  if (NULL != place)                                                          \
-  ARGP_FREE_AND_NULLFIFY (place)
-
-  ARGP_FREE_AND_NULLIFY_UNLESS_NULL (p_argp->script_dirs);
-  ARGP_FREE_AND_NULLIFY_UNLESS_NULL (p_argp->db_file);
-  ARGP_FREE_AND_NULLIFY_UNLESS_NULL (p_argp->term_command);
-  ARGP_FREE_AND_NULLIFY_UNLESS_NULL (p_argp->exec_wrapper);
-  ARGP_FREE_AND_NULLIFY_UNLESS_NULL (p_argp->file_regex);
-  ARGP_FREE_AND_NULLIFY_UNLESS_NULL (p_argp->no_db_flag_file);
-  ARGP_FREE_AND_NULLIFY_UNLESS_NULL (p_argp->run_alt_tag);
+  ARGP_FREE_AND_NULLIFY_UNLESS_NULL_1 (p_argp->script_dirs);
+  ARGP_FREE_AND_NULLIFY_UNLESS_NULL_1 (p_argp->db_file);
+  ARGP_FREE_AND_NULLIFY_UNLESS_NULL_1 (p_argp->term_command);
+  ARGP_FREE_AND_NULLIFY_UNLESS_NULL_1 (p_argp->exec_wrapper);
+  ARGP_FREE_AND_NULLIFY_UNLESS_NULL_1 (p_argp->file_regex);
+  ARGP_FREE_AND_NULLIFY_UNLESS_NULL_1 (p_argp->no_db_flag_file);
+  ARGP_FREE_AND_NULLIFY_UNLESS_NULL_1 (p_argp->run_alt_tag);
 }
 
 void
@@ -47,7 +52,7 @@ argp_init (argp_t *p_argp)
   p_argp->script_dirs = ARGP_STRDUP (SCRIPT_ROFI_SCRIPT_DIRS);
   p_argp->__script_dirs_cache = NULL;
 
-  p_argp->db_file = ARGP_STRDUP (SCRIPT_ROFI_DB_FILE); // TODO
+  p_argp->db_file = str_expand_tilde_alloc (SCRIPT_ROFI_DB_FILE);
   p_argp->term_command = ARGP_STRDUP (SCRIPT_ROFI_XTERM_COMMAND);
 
   p_argp->dump_and_exit = false;
@@ -57,7 +62,7 @@ argp_init (argp_t *p_argp)
 
   p_argp->ignorecase = true;
 
-  p_argp->no_db_flag_file = ARGP_STRDUP (SCRIPT_ROFI_NO_DB_FILE); // TODO
+  p_argp->no_db_flag_file = str_expand_tilde_alloc (SCRIPT_ROFI_NO_DB_FILE);
   p_argp->run_alt_tag = ARGP_STRDUP (SCRIPT_ROFI_RUN_ALT_TAG);
 
   p_argp->use_markup = true;
@@ -117,10 +122,14 @@ argp_print_usage (argp_t *p_argp, FILE *fp)
   P ("-e | --execute : execute selection (%d)\n", p_argp->execute);
 
   P ("-S SCRIPT_DIRS | --script-dirs SCRIPT_DIRS (':'-separated list)\n", );
-  // TODO
-  /* for (const auto& script_dir : v_script_dirs) { */
-  /*     P("\t%s\n", script_dir.c_str()); */
-  /* } */
+  UT_array *script_dirs = argp_get_script_dirs_owned (p_argp);
+  char **pp_script_dir = NULL;
+  while (
+      script_dirs != NULL
+      && (pp_script_dir = (char **)utarray_next (script_dirs, pp_script_dir)))
+    {
+      P ("\t%s\n", *pp_script_dir);
+    }
 
   P ("-D HIST_DB_FILE   :\t %s\n", p_argp->db_file);
   P ("-T XTERM_COMMAND  :\t %s\n", p_argp->term_command);
@@ -137,3 +146,51 @@ argp_print_usage (argp_t *p_argp, FILE *fp)
   P ("Exiting.\n", );
 #undef P
 }
+
+UT_array *
+argp_get_script_dirs_owned (argp_t *p_argp)
+{
+  if (NULL == p_argp || NULL == p_argp->script_dirs)
+    {
+      return NULL;
+    }
+
+  if (NULL != p_argp->__script_dirs_cache)
+    {
+      return p_argp->__script_dirs_cache;
+    }
+
+  UT_array *splitted = str_split (p_argp->script_dirs, ":");
+  UT_array *expanded = NULL;
+  utarray_new (expanded, &ut_str_icd);
+
+  char **pp_script_dir = NULL;
+  while ((pp_script_dir = (char **)utarray_next (splitted, pp_script_dir)))
+    {
+      char *exp = str_expand_tilde_alloc (*pp_script_dir);
+      utarray_push_back (expanded, &exp);
+      STRS_FREE (exp);
+    }
+
+  utarray_free (splitted);
+  p_argp->__script_dirs_cache = expanded;
+  return p_argp->__script_dirs_cache;
+}
+
+void
+argp_set_script_dirs (argp_t *p_argp, char *script_dirs)
+{
+  if (NULL == p_argp)
+    return;
+
+  ARGP_FREE_AND_NULLIFY_UNLESS_NULL_1 (p_argp->script_dirs);
+  ARGP_FREE_AND_NULLIFY_UNLESS_NULL (p_argp->__script_dirs_cache,
+                                     utarray_free);
+
+  p_argp->script_dirs = ARGP_STRDUP (script_dirs);
+}
+
+
+// TODO  bool argp_load_db_allowed (argp_t *p_argp)
+
+// TODO bool argp_save_db_allowed (argp_t *p_argp)

@@ -47,6 +47,7 @@ EXTERN void argp_print_usage (argp_t *p_argp, FILE *fp);
 EXTERN bool argp_load_db_allowed (argp_t *p_argp);
 EXTERN bool argp_save_db_allowed (argp_t *p_argp);
 
-EXTERN UT_array *argp_get_script_dirs (const char *script_dirs);
+EXTERN void argp_set_script_dirs (argp_t *p_argp, char *script_dirs);
+EXTERN UT_array *argp_get_script_dirs_owned (argp_t *p_argp);
 
 #endif /* ARGP_H */
