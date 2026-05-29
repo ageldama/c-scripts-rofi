@@ -60,3 +60,20 @@ argp_init (argp_t *p_argp)
 
   p_argp->use_markup = true;
 }
+
+
+void argp_parse (int argc, const char** argv, argp_t *p_argp)
+{
+  int opt;
+  while ((opt = getopt(argc, argv, "?hpsePS:D:T:W:/:iA:m")) != -1) {
+
+            case '?':
+        case 'h':
+  default:
+            print_usage(stderr);
+            exit(EXIT_FAILURE);
+            break;
+
+  }
+
+}

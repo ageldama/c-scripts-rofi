@@ -39,7 +39,7 @@ typedef struct
 } argp_t;
 
 EXTERN void argp_init (argp_t *p_argp);
-EXTERN void argp_parse (argp_t *p_argp);
+EXTERN void argp_parse (int argc, const char** argv, argp_t *p_argp);
 EXTERN void argp_free_internal (argp_t *p_argp);
 
 EXTERN void argp_print_usage (FILE *fp);
