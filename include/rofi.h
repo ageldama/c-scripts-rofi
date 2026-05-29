@@ -1,18 +1,19 @@
 #ifndef ROFI_H
 #define ROFI_H
 
+#include "externc.h"
 #include "utarray.h"
 #include <stdbool.h>
 
 #define ROFI_MALLOC malloc
 #define ROFI_FREE free
 
-typdef void (*rofi_write_fn) (const int fd);
+typedef void (*rofi_write_fn) (const int fd);
 
-ssize_t fd_write (int fd, const char *s);
-ssize_t fd_write_sep (int fd, const char *s, char sep);
+EXTERN ssize_t fd_write (int fd, const char *s);
+EXTERN ssize_t fd_write_sep (int fd, const char *s, char sep);
 
-char *fd_slurp (int fd);
+EXTERN char *fd_slurp (int fd);
 
 typedef struct
 {
@@ -21,10 +22,10 @@ typedef struct
   char *stdout;
 } rofi_result_t;
 
-void rofi_free_result (rofi_result_t *p_result);
+EXTERN void rofi_free_result (rofi_result_t *p_result);
 
-char *rofi_run (UT_array *cmdv, const rofi_write_fn *write_fn,
-                rofi_result_t *p_result);
+EXTERN char *rofi_run (UT_array *cmdv, const rofi_write_fn *write_fn,
+                       rofi_result_t *p_result);
 
 /*
 
