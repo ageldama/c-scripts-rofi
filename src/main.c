@@ -24,6 +24,7 @@ main (int argc, char **argv)
   argp_init (&argp);
   argp_parse (argc, argv, &argp);
 
+#if 0
   rofi_ask_yn_opts_t yn_opts = {
     .common = {
       .prompt = "Y/n?",
@@ -47,6 +48,7 @@ main (int argc, char **argv)
   printf ("yes/no: %d // canceled: %d\n", ask_yn_result.answer_yes,
           ask_yn_result.canceled);
   rofi_free_result (&(ask_yn_result.base));
+#endif
 
 #if 0
   rofi_show_error ("foobar 한글 여기도");

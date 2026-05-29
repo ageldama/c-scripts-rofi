@@ -78,9 +78,10 @@ typedef struct
   char *selected;
 } rofi_select_list_result_t;
 
-char *rofi_select_list (const rofi_select_list_opts_t *p_opts, UT_array *list,
-                        rofi_select_list_callbacks_t *p_callbacks,
-                        void *callback_data,
-                        rofi_select_list_result_t *p_result);
+EXTERN char *rofi_select_list (const rofi_select_list_opts_t *p_opts,
+                               UT_array *list,
+                               rofi_select_list_callbacks_t *p_callbacks,
+                               void *callback_data,
+                               rofi_select_list_result_t *p_result);
 
 #endif /* ROFI_H */
