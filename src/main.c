@@ -47,6 +47,8 @@ main (int argc, char **argv)
   file_find_list_multiple (files, argp_get_script_dirs_owned (&argp),
                            &file_find_args);
 
+  db_sort_by_last_epoch_desc (p_db, files);
+
   char **pp_file = NULL;
   while ((pp_file = (char **)utarray_next (files, pp_file)))
     {

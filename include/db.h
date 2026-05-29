@@ -2,6 +2,7 @@
 #define DB_H
 
 #include "externc.h"
+#include "utarray.h"
 #include "uthash.h"
 #include <stdbool.h>
 #include <time.h>
@@ -48,5 +49,7 @@ EXTERN bool db_toggle_run_alt (db_t **pp_db, const char *cmd);
 EXTERN bool db_is_run_alt (db_t *p_db, const char *cmd);
 
 EXTERN long long file_size (const char *filename);
+
+EXTERN void db_sort_by_last_epoch_desc (db_t *p_db, UT_array *cmd_list);
 
 #endif /* DB_H */

@@ -252,3 +252,24 @@ db_toggle_run_alt (db_t **pp_db, const char *cmd)
   bool curr = db_is_run_alt (*pp_db, cmd);
   return db_set_run_alt (pp_db, cmd, !curr);
 }
+
+db_t *p_db_sort = NULL;
+
+int
+compare_cmd_by_last_epoch_inv (const void *_a, const void *_b)
+{
+  const char *a = *(const char *const *)_a;
+  const char *b = *(const char *const *)_b;
+  const time_t a_epoch = db_get_last_epoch (p_db_sort, a);
+  const time_t b_epoch = db_get_last_epoch (p_db_sort, b);
+  return (b_epoch > a_epoch) - (b_epoch < a_epoch);
+}
+
+void
+db_sort_by_last_epoch_desc (db_t *p_db, UT_array *cmd_list)
+{
+  assert (NULL == p_db_sort);
+  p_db_sort = p_db;
+  utarray_sort (cmd_list, compare_cmd_by_last_epoch_inv);
+  p_db_sort = NULL;
+}
