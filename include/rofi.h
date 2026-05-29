@@ -7,6 +7,7 @@
 
 #define ROFI_MALLOC malloc
 #define ROFI_FREE free
+#define ROFI_STRDUP strdup
 
 typedef void (*rofi_write_fn) (const int fd, void *closure);
 

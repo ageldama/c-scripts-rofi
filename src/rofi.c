@@ -57,11 +57,14 @@ fd_slurp_alloc (int fd)
 void
 rofi_free_result (rofi_result_t *p_result)
 {
-  if (NULL == p_result || NULL == p_result->stdout)
+  if (NULL == p_result)
     return;
 
-  ROFI_FREE (p_result->stdout);
-  p_result->stdout = NULL;
+  if (NULL != p_result->stdout)
+    {
+      ROFI_FREE (p_result->stdout);
+      p_result->stdout = NULL;
+    }
 }
 
 char *

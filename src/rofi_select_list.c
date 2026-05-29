@@ -1,6 +1,7 @@
 #include "macrofun.h"
 #include "rofi.h"
 #include "utarray.h"
+#include <assert.h>
 #include <stdio.h>
 
 typedef struct
@@ -38,7 +39,10 @@ rofi_select_list (const rofi_select_list_opts_t *p_opts, UT_array *list,
 #define ROFI_SELECT_LIST_SELECTED_ROW_STR_LEN 8192
   char *selected_row_str = malloc (ROFI_SELECT_LIST_SELECTED_ROW_STR_LEN);
 
-  UT_array *cmdv = NULL;
+  UT_array *cmdv;
+
+l_reselect:
+  cmdv = NULL;
   utarray_new (cmdv, &ut_str_icd);
 
   UTARRAY_PUSH_BACK_LITERAL (cmdv, "rofi");
@@ -108,10 +112,22 @@ rofi_select_list (const rofi_select_list_opts_t *p_opts, UT_array *list,
         {
           p_result->canceled = false;
 
-          /* TODO
-          int yn_idx = atoi (p_result->base.stdout);
-          p_result->answer_yes = yn_idx == 0;
-          */
+#define ROFI_SELECT_LIST_MAGIC_EXITCODE 256
+          unsigned int nth = atoi (p_result->base.stdout);
+          char **pp_cmd = (char **)utarray_eltptr (list, nth);
+          assert (pp_cmd != NULL);
+          char *cmd = *pp_cmd;
+          if (p_result->base.exitcode > ROFI_SELECT_LIST_MAGIC_EXITCODE)
+            {
+              p_callbacks->toggle_run_alt (cmd, callback_data);
+              selected_row = nth;
+              rofi_free_result (&(p_result->base));
+              goto l_reselect;
+            }
+          else
+            {
+              p_result->selected = ROFI_STRDUP (cmd);
+            }
         }
     }
 
