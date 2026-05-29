@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 #include "db.h"
+#include "strs.h"
 
 db_t *p_db = NULL;
 
@@ -17,6 +18,24 @@ main (int argc, char **argv)
 
   p_db = db_init ();
 
+
+#if 0
+  UT_array* script_dirs = str_split(
+                                    "~/local/scripts:~/local/bin:~/.screenlayout:~/P/v3/bin", ":");
+
+  if(script_dirs != NULL) {
+    char **pp = NULL;
+
+    while ((pp = (char **)utarray_next(script_dirs, pp))) {
+      printf("[%s]\n", *pp);
+    }
+
+    utarray_free(script_dirs);
+  }
+#endif
+
+
+#if 0
   db_add_args_copying (&p_db, "foo", 1, false);
   db_add_args_copying (&p_db, "bar", 2, true);
 
@@ -27,6 +46,7 @@ main (int argc, char **argv)
   {
     printf ("%s / %ld / %d\n", curr->cmd, curr->last_epoch, curr->run_alt);
   }
+#endif
 
   exit (EXIT_SUCCESS);
 }
