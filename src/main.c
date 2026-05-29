@@ -4,6 +4,7 @@
 #include "argp.h"
 #include "db.h"
 #include "errmsg.h"
+#include "exec.h"
 #include "file_find.h"
 #include "strs.h"
 
@@ -22,6 +23,19 @@ main (int argc, char **argv)
   argp_init (&argp);
   argp_parse (argc, argv, &argp);
 
+#if 0
+  UT_array *cmdv = NULL;
+  utarray_new (cmdv, &ut_str_icd);
+
+  char *cmdv_[] = { "ls", "-lh", "/etc" };
+  utarray_push_back (cmdv, &cmdv_[0]);
+  utarray_push_back (cmdv, &cmdv_[1]);
+  utarray_push_back (cmdv, &cmdv_[2]);
+  exec_vp (cmdv);
+  utarray_free (cmdv);
+#endif
+
+#if 0
   regex_t file_regex;
 
   char *file_find_regex_errmsg
@@ -57,6 +71,7 @@ main (int argc, char **argv)
 
   utarray_free (files);
   file_find_regex_free (&file_regex);
+#endif
 
 #if 0
   UT_array* script_dirs = str_split(
