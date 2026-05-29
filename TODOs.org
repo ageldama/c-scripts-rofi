@@ -1,10 +1,10 @@
-* TODO v1.0 [4/9]
+* TODO v1.0 [5/9]
   1) [X] db
   2) [X] argp
   3) [X] tildeexpand
      
   4) [X] file-find
-  5) [ ] regex
+  5) [X] regex
 
   6) [ ] exec
   7) [ ] rofi/ask-yn

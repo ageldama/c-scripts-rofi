@@ -3,6 +3,7 @@
 
 #include "argp.h"
 #include "db.h"
+#include "errmsg.h"
 #include "file_find.h"
 #include "strs.h"
 
@@ -21,14 +22,25 @@ main (int argc, char **argv)
   argp_init (&argp);
   argp_parse (argc, argv, &argp);
 
+  regex_t file_regex;
+
+  char *file_find_regex_errmsg
+      = file_find_regex_compile (&file_regex, "\\.tcl$");
+  if (NULL != file_find_regex_errmsg)
+    {
+      fputs (file_find_regex_errmsg, stderr);
+      ERRMSG_FREE (file_find_regex_errmsg);
+      exit (EXIT_FAILURE);
+    }
+
   UT_array *files = NULL;
   utarray_new (files, &ut_str_icd);
 
   file_find_args_t file_find_args = {
     .dir_matcher = NULL,
     .dir_matcher_closure = NULL,
-    .file_matcher = only_file_matcher,
-    .file_matcher_closure = NULL,
+    .file_matcher = file_find_file_with_regex,
+    .file_matcher_closure = &file_regex,
     .recurse = true,
   };
 
@@ -42,6 +54,7 @@ main (int argc, char **argv)
     }
 
   utarray_free (files);
+  file_find_regex_free (&file_regex);
 
 #if 0
   UT_array* script_dirs = str_split(

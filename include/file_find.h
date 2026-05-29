@@ -3,6 +3,7 @@
 
 #include "externc.h"
 #include "utarray.h"
+#include <regex.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <sys/stat.h>
@@ -27,8 +28,17 @@ EXTERN void file_find_list_multiple (UT_array *dstarray,
                                      const UT_array *dirnames,
                                      file_find_args_t *p_args);
 
-EXTERN bool only_file_matcher (const char *abs_path, const char *dirname,
-                               const char *name, const struct stat *p_stat,
-                               void *closure);
+EXTERN bool file_find_only_file (const char *abs_path, const char *dirname,
+                                 const char *name, const struct stat *p_stat,
+                                 void *closure);
+
+EXTERN char *file_find_regex_compile (regex_t *p_regex, const char *pattern);
+
+EXTERN void file_find_regex_free (regex_t *p_regex);
+
+EXTERN bool file_find_file_with_regex (const char *abs_path,
+                                       const char *dirname, const char *name,
+                                       const struct stat *p_stat,
+                                       void *closure);
 
 #endif /* FILE_FIND_H */
