@@ -1,4 +1,5 @@
 #include "errmsg.h"
+#include "exec.h"
 #include "file_find.h"
 #include "main.h"
 #include <string.h>
@@ -70,4 +71,24 @@ save_or_not (void)
           ERRMSG_FREE (save_errmsg);
         }
     }
+}
+
+void
+print_or_not (void)
+{
+  if (select_script_result.canceled)
+    return;
+  fputs (select_script_result.selected, stdout);
+}
+
+void
+exec_or_not (void)
+{
+  if (select_script_result.canceled)
+    return;
+
+  // TODO argp.term_command
+  // TODO argp.exec_wrapper
+  // TODO strtok: select_script_result.selected
+  // TODO char *exec_vp (UT_array *cmdv);
 }
