@@ -6,6 +6,7 @@
 #include "errmsg.h"
 #include "exec.h"
 #include "file_find.h"
+#include "rofi.h"
 #include "strs.h"
 
 argp_t argp;
@@ -22,6 +23,10 @@ main (int argc, char **argv)
 
   argp_init (&argp);
   argp_parse (argc, argv, &argp);
+
+#if 0
+  rofi_show_error ("foobar 한글 여기도");
+#endif
 
 #if 0
   UT_array *cmdv = NULL;
