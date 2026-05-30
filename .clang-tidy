@@ -7,8 +7,8 @@ WarningsAsErrors: 'bugprone-*,performance-*'
 
 # Filter which headers are analyzed (often set to include project headers only)
 
-HeaderFilterRegex: '^(src/|include/)'
-
+HeaderFilterRegex: 'include/.*'
+ExcludeHeaderFilterRegex: 'vnd/.*'
 
 # Check-specific options
 CheckOptions:
