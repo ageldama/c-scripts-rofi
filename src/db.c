@@ -158,15 +158,16 @@ db_load_from_filename (db_t *p_db, const char *filename)
   fread (&tot_entry, sizeof (tot_entry), 1, fp);
 
   // for:entry
+  char *cmd = DB_MALLOC (DB_CMD_MAX);
+
   for (size_t idx = 0; tot_entry > idx; idx++)
     {
       // entry: [cmd_len, cmd]
       size_t cmd_len = 0;
       fread (&cmd_len, sizeof (cmd_len), 1, fp);
 
-      char *cmd = DB_MALLOC (cmd_len);
-      memset (cmd, 0, cmd_len);
       fread (cmd, cmd_len, 1, fp);
+      cmd[cmd_len] = 0;
 
       // entry: last_epoch, run_alt
       time_t last_epoch = 0;
@@ -175,13 +176,10 @@ db_load_from_filename (db_t *p_db, const char *filename)
       char run_alt_ch = fgetc (fp);
 
       //
-      db_cmd_entry_t *p_entry = DB_MALLOC (sizeof (db_cmd_entry_t));
-      p_entry->cmd = cmd;
-      p_entry->last_epoch = last_epoch;
-      p_entry->run_alt = run_alt_ch > 0;
-
-      db_add (p_db, p_entry);
+      db_add_args_copying (p_db, cmd, last_epoch, run_alt_ch > 0);
     }
+
+  DB_FREE (cmd);
 
   // ok: no error
   return NULL;
