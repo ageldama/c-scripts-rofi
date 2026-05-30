@@ -41,6 +41,9 @@ main (int argc, char **argv)
       /* save? */
       save_or_not ();
 
+      //
+      compose_cmdline ();
+
       /* print? */
       print_or_not ();
 

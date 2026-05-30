@@ -33,6 +33,9 @@ print_or_not (void)
 {
   if (!argp.print)
     return;
-  fputs (select_script_result.selected, stdout);
+  if (NULL != composed_cmdline)
+    fputs (composed_cmdline, stdout);
+  else
+    fputs (select_script_result.selected, stdout);
   fputs ("\n", stdout);
 }

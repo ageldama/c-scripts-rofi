@@ -21,5 +21,11 @@ cleanup (void)
       p_db = NULL;
     }
 
+  if (composed_cmdline != NULL)
+    {
+      free (composed_cmdline);
+      composed_cmdline = NULL;
+    }
+
   argp_free_internal (&argp);
 }

@@ -17,6 +17,7 @@ extern db_t *p_db;
 extern regex_t *p_regex;
 extern UT_array *script_files;
 extern rofi_select_list_result_t select_script_result;
+extern char *composed_cmdline;
 
 EXTERN void cleanup (void);
 EXTERN void load_or_not (void);
@@ -28,5 +29,6 @@ EXTERN void select_script (void);
 EXTERN void print_or_not (void);
 EXTERN void exec_or_not (void);
 EXTERN void upd_last_epoch_of_selected (void);
+EXTERN void compose_cmdline (void);
 
 #endif /* SCRIPTS_ROFI_MAIN_H */
