@@ -41,11 +41,11 @@ main (int argc, char **argv)
       /* save? */
       save_or_not ();
 
-      /* exec? */
-      exec_or_not ();
-
       /* print? */
       print_or_not ();
+
+      /* exec? */
+      exec_or_not ();
 
       // BYE:
       exit (EXIT_SUCCESS);
