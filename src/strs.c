@@ -37,14 +37,22 @@ str_trim_both_alloc (const char *str)
 UT_array *
 str_split (const char *str, const char *delim)
 {
+  if (str == NULL)
+    {
+      return NULL;
+    }
+
   UT_array *results = NULL;
   UTARRAY_STR_NEW (results);
 
-  if (str == NULL)
-    {
-      return results;
-    }
+  str_split_into (str, delim, results);
 
+  return results;
+}
+
+void
+str_split_into (const char *str, const char *delim, UT_array *dstarray)
+{
   char *saveptr;
   char *str_copy = strdup (str);
 
@@ -53,14 +61,12 @@ str_split (const char *str, const char *delim)
     {
       if (strlen (token) > 0)
         {
-          utarray_push_back (results, &token);
+          utarray_push_back (dstarray, &token);
         }
       token = strtok_r (NULL, delim, &saveptr);
     }
 
   free (str_copy);
-
-  return results;
 }
 
 void

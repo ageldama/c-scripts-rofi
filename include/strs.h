@@ -11,6 +11,9 @@
 
 EXTERN char *str_trim_both_alloc (const char *str);
 
+EXTERN void str_split_into (const char *str, const char *delim,
+                            UT_array *dstarray);
+
 EXTERN UT_array *str_split (const char *str, const char *delim);
 
 EXTERN void str_expand_tilde (const char *str, char *outp,

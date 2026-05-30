@@ -55,7 +55,7 @@ argp_init (argp_t *p_argp)
 
   p_argp->dump_and_exit = false;
 
-  p_argp->execute = NULL;
+  p_argp->exec_wrapper = NULL;
   p_argp->file_regex = NULL;
 
   p_argp->ignorecase = true;
