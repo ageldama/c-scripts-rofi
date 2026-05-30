@@ -180,7 +180,7 @@ db_load_from_filename (db_t *p_db, const char *filename)
       p_entry->last_epoch = last_epoch;
       p_entry->run_alt = run_alt_ch > 0;
 
-      HASH_ADD_STR (p_db->p_cmd_hash, cmd, p_entry);
+      db_add (p_db, p_entry);
     }
 
   // ok: no error
@@ -234,6 +234,12 @@ db_set_last_epoch (db_t *p_db, const char *cmd, time_t last_epoch)
       db_add_args_copying (p_db, cmd, last_epoch, /*run_alt*/ false);
       return last_epoch;
     }
+}
+
+time_t
+db_upd_last_epoch (db_t *p_db, const char *cmd)
+{
+  return db_set_last_epoch (p_db, cmd, time (NULL));
 }
 
 bool

@@ -45,6 +45,8 @@ EXTERN db_cmd_entry_t *db_get (db_t *p_db, const char *cmd);
 EXTERN time_t db_set_last_epoch (db_t *p_db, const char *cmd,
                                  time_t last_epoch);
 
+EXTERN time_t db_upd_last_epoch (db_t *p_db, const char *cmd);
+
 EXTERN time_t db_get_last_epoch (db_t *p_db, const char *cmd);
 
 EXTERN bool db_set_run_alt (db_t *p_db, const char *cmd, bool run_alt);

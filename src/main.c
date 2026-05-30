@@ -29,15 +29,25 @@ main (int argc, char **argv)
   /* select in list */
   select_script ();
 
-  /* save? */
-  save_or_not ();
+  if (select_script_result.canceled)
+    {
+      fputs ("USER CANCELED\n", stderr);
+      exit (EXIT_FAILURE);
+    }
+  else
+    {
+      upd_last_epoch_of_selected ();
 
-  /* exec? */
-  exec_or_not ();
+      /* save? */
+      save_or_not ();
 
-  /* print? */
-  print_or_not ();
+      /* exec? */
+      exec_or_not ();
 
-  // BYE:
-  exit (EXIT_SUCCESS);
+      /* print? */
+      print_or_not ();
+
+      // BYE:
+      exit (EXIT_SUCCESS);
+    }
 }

@@ -74,9 +74,15 @@ save_or_not (void)
 }
 
 void
+upd_last_epoch_of_selected (void)
+{
+  db_upd_last_epoch (p_db, select_script_result.selected);
+}
+
+void
 print_or_not (void)
 {
-  if (select_script_result.canceled)
+  if (!argp.print)
     return;
   fputs (select_script_result.selected, stdout);
   fputs ("\n", stdout);
@@ -85,7 +91,7 @@ print_or_not (void)
 void
 exec_or_not (void)
 {
-  if (select_script_result.canceled)
+  if (!argp.execute)
     return;
 
   // TODO argp.term_command

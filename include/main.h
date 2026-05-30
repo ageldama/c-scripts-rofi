@@ -27,5 +27,6 @@ EXTERN void list_script_files (void);
 EXTERN void select_script (void);
 EXTERN void print_or_not (void);
 EXTERN void exec_or_not (void);
+EXTERN void upd_last_epoch_of_selected (void);
 
 #endif /* SCRIPTS_ROFI_MAIN_H */
