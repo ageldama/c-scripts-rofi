@@ -97,6 +97,7 @@ l_reselect:
       return errmsg;
     }
 
+#define ROFI_SELECT_LIST_MAGIC_EXITCODE 256
   if (NULL == p_result)
     {
       ROFI_FREE (result.stdout);
@@ -106,18 +107,25 @@ l_reselect:
       memcpy (&(p_result->base), &result, sizeof (rofi_result_t));
       if (p_result->base.exitcode != 0)
         {
-          p_result->canceled = true;
+          if (p_result->base.exitcode > ROFI_SELECT_LIST_MAGIC_EXITCODE)
+            {
+              p_result->base.alt = true;
+              p_result->canceled = false;
+            }
+          else
+            {
+              p_result->base.alt = false;
+              p_result->canceled = true;
+            }
         }
-      else
-        {
-          p_result->canceled = false;
 
-#define ROFI_SELECT_LIST_MAGIC_EXITCODE 256
+      if (!(p_result->canceled))
+        {
           unsigned int nth = atoi (p_result->base.stdout);
           char **pp_cmd = (char **)utarray_eltptr (list, nth);
           assert (pp_cmd != NULL);
           char *cmd = *pp_cmd;
-          if (p_result->base.exitcode > ROFI_SELECT_LIST_MAGIC_EXITCODE)
+          if (p_result->base.alt)
             {
               p_callbacks->toggle_run_alt (cmd, callback_data);
               selected_row = nth;

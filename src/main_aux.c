@@ -79,6 +79,7 @@ print_or_not (void)
   if (select_script_result.canceled)
     return;
   fputs (select_script_result.selected, stdout);
+  fputs ("\n", stdout);
 }
 
 void
