@@ -25,13 +25,7 @@ select_script (void)
   char *errmsg = rofi_select_list (&select_script_opts, script_files,
                                    &select_script_callbacks, p_db,
                                    &select_script_result);
-  if (NULL != errmsg)
-    {
-      fputs (errmsg, stderr);
-      fputs ("\n", stderr);
-      ERRMSG_FREE (errmsg);
-      exit (EXIT_FAILURE);
-    }
+  ERRMSG_FAIL_IF (stderr, errmsg);
 
   rofi_free_result (&(select_script_result.base));
 }

@@ -31,4 +31,6 @@
     }                                                                         \
   while (0)
 
+#define UTARRAY_STR_NEW(utarray_ptr) utarray_new (utarray_ptr, &ut_str_icd)
+
 #endif /* MACROFUN_H */

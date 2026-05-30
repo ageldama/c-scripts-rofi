@@ -1,3 +1,4 @@
+#include "macrofun.h"
 #include "rofi.h"
 #include "utarray.h"
 
@@ -5,7 +6,7 @@ char *
 rofi_show_error (const char *message)
 {
   UT_array *cmdv = NULL;
-  utarray_new (cmdv, &ut_str_icd);
+  UTARRAY_STR_NEW (cmdv);
 
   char *cmdv_[] = { "rofi", "-e", (char *)message };
   utarray_push_back (cmdv, &cmdv_[0]);

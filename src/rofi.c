@@ -95,10 +95,7 @@ rofi_run (UT_array *cmdv, rofi_write_fn write_fn, void *write_closure,
       close (c_to_p[1]);
 
       char *exec_errmsg = exec_vp (cmdv);
-
-      fputs (exec_errmsg, stderr);
-      ERRMSG_FREE (exec_errmsg);
-      exit (EXIT_FAILURE);
+      ERRMSG_FAIL_IF (stderr, exec_errmsg);
     }
 
   // Parent

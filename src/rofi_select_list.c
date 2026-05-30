@@ -43,7 +43,7 @@ rofi_select_list (const rofi_select_list_opts_t *p_opts, UT_array *list,
 
 l_reselect:
   cmdv = NULL;
-  utarray_new (cmdv, &ut_str_icd);
+  UTARRAY_STR_NEW (cmdv);
 
   UTARRAY_PUSH_BACK_LITERAL (cmdv, "rofi");
   if (p_opts->common.ignorecase)

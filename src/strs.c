@@ -2,6 +2,7 @@
 #include <string.h>
 #include <wordexp.h>
 
+#include "macrofun.h"
 #include "strs.h"
 
 char *
@@ -37,7 +38,7 @@ UT_array *
 str_split (const char *str, const char *delim)
 {
   UT_array *results = NULL;
-  utarray_new (results, &ut_str_icd);
+  UTARRAY_STR_NEW (results);
 
   if (str == NULL)
     {

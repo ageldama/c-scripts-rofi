@@ -207,7 +207,7 @@ argp_get_script_dirs_owned (argp_t *p_argp)
 
   UT_array *splitted = str_split (p_argp->script_dirs, ":");
   UT_array *expanded = NULL;
-  utarray_new (expanded, &ut_str_icd);
+  UTARRAY_STR_NEW (expanded);
 
   char **pp_script_dir = NULL;
   while ((pp_script_dir = (char **)utarray_next (splitted, pp_script_dir)))

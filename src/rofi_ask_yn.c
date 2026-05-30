@@ -21,7 +21,7 @@ char *
 rofi_ask_yn (const rofi_ask_yn_opts_t *yn_opts, rofi_ask_yn_result_t *p_result)
 {
   UT_array *cmdv = NULL;
-  utarray_new (cmdv, &ut_str_icd);
+  UTARRAY_STR_NEW (cmdv);
 
   UTARRAY_PUSH_BACK_LITERAL (cmdv, "rofi");
   if (yn_opts->common.ignorecase)
