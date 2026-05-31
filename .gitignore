@@ -74,3 +74,7 @@ dkms.conf
 
 /tests/critcl-flags.tcl
 /Testing/
+
+GPATH
+GTAGS
+GRTAGS
