@@ -1,10 +1,12 @@
 #include "main.h"
+#include "file_find.h"
 
 void
 cleanup (void)
 {
   if (p_regex != NULL)
     {
+      file_find_regex_free (p_regex);
       free (p_regex);
       p_regex = NULL;
     }
