@@ -70,3 +70,7 @@ dkms.conf
 /scripts-rofi
 /TAGS
 /compile_commands.json
+/CTestTestfile.cmake
+
+/tests/critcl-flags.tcl
+/Testing/

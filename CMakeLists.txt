@@ -96,3 +96,24 @@ add_executable(scripts-rofi ${SOURCES})
 target_include_directories(scripts-rofi
   PRIVATE include
   ${PROJECT_SOURCE_DIR}/vnd/uthash/include)
+
+
+# --- testing
+option(BUILD_TESTING "Build the testing suite" OFF)
+
+if(BUILD_TESTING)
+  enable_testing()
+
+  find_program(TCLSH NAMES tclsh tclsh9.0 tclsh90 REQUIRED)
+  message(STATUS "Found tclsh: ${TCLSH}")
+
+  file(GENERATE
+    OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/tests/critcl-flags.tcl"
+    CONTENT "set ::scripts_rofi::cflags {$<JOIN:$<TARGET_PROPERTY:scripts-rofi,COMPILE_OPTIONS>, >}
+set ::scripts_rofi::ldflags {$<JOIN:$<TARGET_PROPERTY:scripts-rofi,LINK_OPTIONS>, >}\n")
+
+  add_test(NAME hello_test COMMAND ${TCLSH} "${CMAKE_CURRENT_SOURCE_DIR}/tests/hello.test")
+
+  #add_test(NAME strs_test COMMAND ${TCLSH} "${CMAKE_CURRENT_SOURCE_DIR}/tests/strs_test.tcl")
+endif()
+

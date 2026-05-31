@@ -1,0 +1,13 @@
+package require tcltest
+namespace import ::tcltest::*
+
+test sum_two {} -body {
+    expr 40 + 2
+} -result 42
+
+cleanupTests
+
+# Local Variables:
+# mode: tcl
+# fill-column: 80
+# End:
