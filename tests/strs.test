@@ -9,7 +9,7 @@ critcl::ccode {
     #include "strs.h"
 }
 
-critcl::csources [file dirn [file norm [info scr]]]/../src/strs.c
+#critcl::csources [file dirn [file norm [info scr]]]/../src/strs.c
 
 namespace eval ::strs {
     namespace export trim_both
