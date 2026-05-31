@@ -6,26 +6,28 @@ source "[file dirn [file norm [info scr]]]/00.prologue.tcl"
 ::tcommon begin
 
 critcl::ccode {
-    #include "strs.h"
+   #include "strs.h"
 }
 
-#critcl::csources [file dirn [file norm [info scr]]]/../src/strs.c
+critcl::csources [file dirn [file norm [info scr]]]/../src/strs.c
 
 namespace eval ::strs {
     namespace export trim_both
 
-    critcl::cproc trim_both {char* s} string {
-        printf("[%s]\n", "foobar");
-        return "";
+    critcl::cproc trim_both {char* inp} string {
+        char* res = str_trim_both_alloc(inp);
+        size_t len = strlen(res);
+        char* buf = Tcl_Alloc (len+1);
+        strncpy(buf, res, len);
+        buf[len] = 0;
+        return buf;
     }
 }
 
-if {![critcl::load]} {
-    error "Building and loading the project failed."
-}
+if {![critcl::load]} {error "[FAIL] critcl"}
 
-test trim_both__left {} -body {
-    ::strs::trim_both "   foo bar"
+test trim_both {} -body {
+    ::strs::trim_both "  foo bar  "
 } -result "foo bar"
 
 

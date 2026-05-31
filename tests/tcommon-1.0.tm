@@ -14,7 +14,7 @@ namespace eval ::tcommon {
             package require critcl
 
             critcl::cflags  {*}$::scripts_rofi::cflags
-            critcl::cheaders {*}[lmap dir $::scripts_rofi::incdirs  {string cat -I $dir}]
+            critcl::cheaders {*}[lmap dir $::scripts_rofi::incdirs {string cat -I $dir}]
             critcl::ldflags {*}$::scripts_rofi::ldflags
         }
     }
