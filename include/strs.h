@@ -21,4 +21,6 @@ EXTERN void str_expand_tilde (const char *str, char *outp,
 
 EXTERN char *str_expand_tilde_alloc (const char *str);
 
+EXTERN int str_hello(void);
+
 #endif /* STRS_H */

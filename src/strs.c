@@ -89,3 +89,6 @@ str_expand_tilde_alloc (const char *str)
   str_expand_tilde (str, buf, STRS_TILDE_EXPAND_MAX - 1);
   return buf;
 }
+
+
+int str_hello(void) { return 42; }

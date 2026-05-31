@@ -22,6 +22,10 @@ namespace eval ::strs {
         buf[len] = 0;
         return buf;
     }
+
+    critcl::cproc hello {} int {
+        return str_hello();
+    }
 }
 
 if {![critcl::load]} {error "[FAIL] critcl"}
@@ -29,6 +33,11 @@ if {![critcl::load]} {error "[FAIL] critcl"}
 test trim_both {} -body {
     ::strs::trim_both "  foo bar  "
 } -result "foo bar"
+
+
+test hello_int {} -body {
+    ::strs::hello
+} -result 42
 
 
 ::tcommon finish
