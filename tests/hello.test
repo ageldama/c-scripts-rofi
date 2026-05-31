@@ -1,11 +1,18 @@
 package require tcltest
 namespace import ::tcltest::*
 
+::tcl::tm::path add [file dirn [file norm [info scr]]]
+package require tcommon
+
+::tcommon begin
+
 test sum_two {} -body {
-    expr 40 + 2
+    expr 41 + 1
 } -result 42
 
-cleanupTests
+
+::tcommon finish
+
 
 # Local Variables:
 # mode: tcl
