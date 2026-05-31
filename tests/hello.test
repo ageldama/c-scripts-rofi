@@ -1,8 +1,7 @@
 package require tcltest
 namespace import ::tcltest::*
 
-::tcl::tm::path add [file dirn [file norm [info scr]]]
-package require tcommon
+source "[file dirn [file norm [info scr]]]/00.prologue.tcl"
 
 ::tcommon begin
 
