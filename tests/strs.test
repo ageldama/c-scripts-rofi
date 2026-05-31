@@ -1,0 +1,38 @@
+package require tcltest
+namespace import ::tcltest::*
+
+source "[file dirn [file norm [info scr]]]/00.prologue.tcl"
+
+::tcommon begin
+
+critcl::ccode {
+    #include "strs.h"
+}
+
+critcl::csources [file dirn [file norm [info scr]]]/../src/strs.c
+
+namespace eval ::strs {
+    namespace export trim_both
+
+    critcl::cproc trim_both {char* s} string {
+        printf("[%s]\n", "foobar");
+        return "";
+    }
+}
+
+if {![critcl::load]} {
+    error "Building and loading the project failed."
+}
+
+test trim_both__left {} -body {
+    ::strs::trim_both "   foo bar"
+} -result "foo bar"
+
+
+::tcommon finish
+
+
+# Local Variables:
+# mode: tcl
+# fill-column: 80
+# End:

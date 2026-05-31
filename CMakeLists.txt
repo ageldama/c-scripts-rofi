@@ -109,11 +109,13 @@ if(BUILD_TESTING)
 
   file(GENERATE
     OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/tests/critcl-flags.tcl"
-    CONTENT "set ::scripts_rofi::cflags {$<JOIN:$<TARGET_PROPERTY:scripts-rofi,COMPILE_OPTIONS>, >}
-set ::scripts_rofi::ldflags {$<JOIN:$<TARGET_PROPERTY:scripts-rofi,LINK_OPTIONS>, >}\n")
+    CONTENT "set cflags {$<JOIN:$<TARGET_PROPERTY:scripts-rofi,COMPILE_OPTIONS>, >}
+set incdirs {$<JOIN:$<TARGET_PROPERTY:scripts-rofi,INCLUDE_DIRECTORIES>, >}
+set ldflags {$<JOIN:$<TARGET_PROPERTY:scripts-rofi,LINK_OPTIONS>, >}\n")
 
   add_test(NAME hello_test COMMAND ${TCLSH} "${CMAKE_CURRENT_SOURCE_DIR}/tests/hello.test")
 
-  #add_test(NAME strs_test COMMAND ${TCLSH} "${CMAKE_CURRENT_SOURCE_DIR}/tests/strs_test.tcl")
+  add_test(NAME strs_test COMMAND ${TCLSH} "${CMAKE_CURRENT_SOURCE_DIR}/tests/strs.test")
+
 endif()
 
