@@ -20,7 +20,7 @@ typedef struct
 {
   int exitcode;
   bool alt;
-  char *stdout;
+  char *stdout_text;
 } rofi_result_t;
 
 EXTERN void rofi_free_result (rofi_result_t *p_result);

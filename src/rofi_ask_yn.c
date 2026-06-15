@@ -56,7 +56,7 @@ rofi_ask_yn (const rofi_ask_yn_opts_t *yn_opts, rofi_ask_yn_result_t *p_result)
 
   if (NULL == p_result)
     {
-      ROFI_FREE (result.stdout);
+      ROFI_FREE (result.stdout_text);
     }
   else
     {
@@ -69,7 +69,7 @@ rofi_ask_yn (const rofi_ask_yn_opts_t *yn_opts, rofi_ask_yn_result_t *p_result)
         {
           p_result->canceled = false;
 
-          int yn_idx = atoi (p_result->base.stdout);
+          int yn_idx = atoi (p_result->base.stdout_text);
           p_result->answer_yes = yn_idx == 0;
         }
     }

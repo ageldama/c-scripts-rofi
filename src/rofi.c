@@ -60,10 +60,10 @@ rofi_free_result (rofi_result_t *p_result)
   if (NULL == p_result)
     return;
 
-  if (NULL != p_result->stdout)
+  if (NULL != p_result->stdout_text)
     {
-      ROFI_FREE (p_result->stdout);
-      p_result->stdout = NULL;
+      ROFI_FREE (p_result->stdout_text);
+      p_result->stdout_text = NULL;
     }
 }
 
@@ -109,10 +109,10 @@ rofi_run (UT_array *cmdv, rofi_write_fn write_fn, void *write_closure,
   pid_t result = waitpid (pid, &wstatus, 0);
   (void)result;
 
-  char *stdout = fd_slurp_alloc (c_to_p[0]);
+  char *stdout_text = fd_slurp_alloc (c_to_p[0]);
   close (c_to_p[0]);
 
-  p_result->stdout = stdout;
+  p_result->stdout_text = stdout_text;
   p_result->alt = false;
   p_result->exitcode = wstatus;
 

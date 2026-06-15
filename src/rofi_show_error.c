@@ -21,7 +21,7 @@ rofi_show_error (const char *message)
       return errmsg;
     }
 
-  ROFI_FREE (result.stdout);
+  ROFI_FREE (result.stdout_text);
   utarray_free (cmdv);
 
   return NULL; // OK

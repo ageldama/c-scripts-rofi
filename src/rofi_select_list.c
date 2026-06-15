@@ -100,7 +100,7 @@ l_reselect:
 #define ROFI_SELECT_LIST_MAGIC_EXITCODE 256
   if (NULL == p_result)
     {
-      ROFI_FREE (result.stdout);
+      ROFI_FREE (result.stdout_text);
     }
   else
     {
@@ -121,7 +121,7 @@ l_reselect:
 
       if (!(p_result->canceled))
         {
-          unsigned int nth = atoi (p_result->base.stdout);
+          unsigned int nth = atoi (p_result->base.stdout_text);
           char **pp_cmd = (char **)utarray_eltptr (list, nth);
           assert (pp_cmd != NULL);
           char *cmd = *pp_cmd;
